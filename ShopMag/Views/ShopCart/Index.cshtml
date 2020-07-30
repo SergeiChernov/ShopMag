@@ -1,0 +1,25 @@
+﻿@model ShopCartViewModel
+
+
+
+
+    <div class="container">
+        @foreach (var el in Model.shopCart.listShopItems)
+        {
+            <div class="alert alert-warning" mt-3>
+                <form asp-controller="ShopCart" asp-action="removeFromCart" method="post">
+                    <b>Автомобиль:</b> @el.car.name<br />
+                    <b>Цена:</b> @el.car.price.ToString()$
+                    <div class="text-lg-right">
+                        <button class="btn btn-sm btn-danger" asp-controller="ShopCart" asp-action="removeFromCart" asp-route-id="">Удалить</button>
+                    </div>
+                </form>
+            </div>
+        }
+        <hr />
+        <p class="total">Общая сумма заказа: @Model.shopCart.listShopItems.Sum(i => i.price)$ </p>
+        <a class="btn btn-danger mb-5" asp-controller="ShopCart" asp-action="removeAllCart" asp-route-data="">Очистить корзину</a>
+
+        <a class="btn btn-danger mb-5" asp-controller="Order" asp-action="Checkout" asp-route-id="">Оплатить</a>
+    </div>
+

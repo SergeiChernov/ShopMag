@@ -1,0 +1,27 @@
+﻿
+<p>НЕ РАБОТАЕТ БЛЯ</p>
+<body>
+    @(Html.DevExtreme().DataGrid<ShopMag.Data.Models.ShopCartItem>()
+    .DataSource(ds => ds.Mvc()
+        .Controller("DataBaseCartFull")
+        .LoadAction("Get")
+        .Key("id")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.AddFor(m => m.id);
+
+        columns.AddFor(m => m.price);
+
+        columns.AddFor(m => m.ShopCartId);
+
+        columns.AddFor(m => m.quantity);
+    })
+)
+    <p>мразь не </p>
+</body>
+     
+
+                
+

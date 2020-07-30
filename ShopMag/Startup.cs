@@ -1,0 +1,69 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using ShopMag.Data;
+using ShopMag.Data.interfaces;
+
+using ShopMag.Data.Models;
+using ShopMag.Data.Repository;
+
+namespace ShopMag
+{
+	public class Startup
+	{
+
+		private IConfigurationRoot _confstring;
+
+		public Startup(IHostingEnvironment hostEnv)
+		{
+			_confstring = new ConfigurationBuilder().SetBasePath(hostEnv.ContentRootPath).AddJsonFile("dbsettings.json").Build();
+		}
+
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddDbContext<AppDBContent>(options => options.UseSqlServer(_confstring.GetConnectionString("DefaultConnection")));
+			services.AddTransient<IAllCars, CarRepository>();
+			services.AddTransient<ICarsCategory, CategoryRepository>();
+			services.AddTransient<IAllOrders, OrdersRepository>();
+
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddScoped(sp => ShopCart.GetCart(sp)); //чтобф не заходило два пользвателя в одну корзину
+
+			services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver());
+			services.AddMemoryCache(); //кэш
+			services.AddSession();
+		}
+
+		
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			app.UseDeveloperExceptionPage();
+			app.UseStatusCodePages();
+			app.UseStaticFiles();
+			app.UseSession(); //использование сессий
+							  //app.UseMvcWithDefaultRoute();
+			app.UseMvc(routes =>
+			{
+				routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
+				routes.MapRoute(name: "categoryFilter", template: "Cars/{action}/{category?}", defaults: new { Controllers = "Cars", action = "List" });
+			});
+
+			/*
+			AppDBContent content;
+			
+			using (var scope = app.ApplicationServices.CreateScope())
+			{
+				content = scope.ServiceProvider.GetRequiredService<AppDBContent>();
+				DBObjects.Initial(content);
+			}
+			*/
+		}
+	}
+}

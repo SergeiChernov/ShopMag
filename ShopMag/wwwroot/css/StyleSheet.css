@@ -1,0 +1,13 @@
+﻿body {
+    background: #ffffff
+}
+
+p {
+    font-family: "Comic Sans MS", cursive, sans-serif
+}
+
+.total {
+    color: #d44242; /* Цвет символа */
+    font-size: 200%; /* Размер шрифта */
+    font-weight: 600;
+}

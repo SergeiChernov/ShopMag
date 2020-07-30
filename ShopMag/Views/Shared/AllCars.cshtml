@@ -1,0 +1,10 @@
+﻿@model ShopMag.Data.Models.Car
+
+<div class="col-lg-4">
+   
+    <img class="img-thumbnail" src="@Model.img" alt="@Model.name" />       
+    <h2>Модель: @Model.name</h2>
+    <p>Описание: @Model.longDesc</p>
+    <p>Цена: @Model.price</p>
+    <p><a class="btn btn-warning" asp-controller="ShopCart" asp-action="addToCart" asp-route-id="@Model.id">Добавить в корзину</a></p>
+</div>
